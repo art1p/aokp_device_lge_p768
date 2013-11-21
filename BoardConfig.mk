@@ -29,7 +29,7 @@ BOARD_KERNEL_PAGESIZE := 2048
 
 # Try to build the kernel
 TARGET_KERNEL_CONFIG := cyanogenmod_p768_defconfig
-TARGET_KERNEL_SOURCE := kernel/lge/omap4-common
+TARGET_KERNEL_SOURCE := kernel/lge/omap4-custom
 TARGET_PREBUILT_KERNEL := device/lge/p768/kernel
 
 BOARD_HAS_NO_SELECT_BUTTON := true
@@ -39,7 +39,8 @@ BOARD_HAVE_BLUETOOTH_BCM := true
 
 BOARD_HAS_NO_MISC_PARTITION := true
 
-#TARGET_RECOVERY_PRE_COMMAND := "/system/bin/setup-recovery"
+TARGET_RECOVERY_FSTAB = device/lge/p768/fstab.u2
+RECOVERY_FSTAB_VERSION = 2
 
 TARGET_BOOTLOADER_BOARD_NAME := p768
 
@@ -71,6 +72,8 @@ BOARD_USES_TI_CAMERA_HAL := true
 TI_OMAP4_CAMERAHAL_VARIANT := DONOTBUILDIT
 HARDWARE_OMX := true
 
+#TARGET_USE_CUSTOM_LUN_FILE_PATH := "/sys/devices/virtual/android_usb/android0/f_mass_storage/lun%d/file"
+
 TARGET_USERIMAGES_USE_EXT4 := true
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1033686220
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 2469606195
@@ -83,7 +86,7 @@ TARGET_SPECIFIC_HEADER_PATH := device/lge/p768/include
 
 BOARD_HAS_VIBRATOR_IMPLEMENTATION := ../../device/lge/p768/vibrator.c
 
-COMMON_GLOBAL_CFLAGS += -DICS_CAMERA_BLOB
+COMMON_GLOBAL_CFLAGS += -DICS_CAMERA_BLOB -DHAVE_FM_RADIO
 
 
 KERNEL_SGX_MODULES:
@@ -109,3 +112,5 @@ BOARD_SEPOLICY_UNION := \
     pvrsrvinit.te \
     device.te \
     domain.te
+
+BOARD_HARDWARE_CLASS := device/lge/p768/cmhw/

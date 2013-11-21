@@ -170,8 +170,8 @@
 #define DB_TO_ABE_GAIN(x) ((x) + MIXER_ABE_GAIN_0DB)
 #define DB_TO_CAPTURE_PREAMPLIFIER_VOLUME(x) (((x) + 6) / 6)
 #define DB_TO_CAPTURE_VOLUME(x) (((x) - 6) / 6)
-#define DB_TO_HEADSET_VOLUME(x) (((x) + 20) / 2)
-#define DB_TO_SPEAKER_VOLUME(x) (((x) + 53) / 2)
+#define DB_TO_HEADSET_VOLUME(x) (((x) + 18) / 2)
+#define DB_TO_SPEAKER_VOLUME(x) (((x) + 52) / 2)
 #define DB_TO_EARPIECE_VOLUME(x) (((x) + 24) / 2)
 
 /* use-case specific mic volumes, all in dB */
@@ -259,11 +259,11 @@ struct route_setting defaults[] = {
     /* general */
     {
         .ctl_name = MIXER_DL2_LEFT_EQUALIZER,
-        .strval = "High-pass -20dB",
+        .strval = MIXER_0DB_HIGH_PASS,
     },
     {
         .ctl_name = MIXER_DL2_RIGHT_EQUALIZER,
-        .strval = "High-pass -20dB",
+        .strval = MIXER_0DB_HIGH_PASS,
     },
     {
         .ctl_name = MIXER_DL1_EQUALIZER,
@@ -279,7 +279,7 @@ struct route_setting defaults[] = {
     },
     {
         .ctl_name = MIXER_DL2_MEDIA_PLAYBACK_VOLUME,
-        .intval = MIXER_ABE_GAIN_0DB - 5,
+        .intval = MIXER_ABE_GAIN_0DB - 3,
     },
     {
         .ctl_name = MIXER_DL1_VOICE_PLAYBACK_VOLUME,
@@ -886,6 +886,12 @@ static void set_input_volumes(struct omap_audio_device *adev, int main_mic_on,
         volume = DB_TO_ABE_GAIN(main_mic_on ? VOICE_CALL_MAIN_MIC_VOLUME :
                 (headset_mic_on ? VOICE_CALL_HEADSET_MIC_VOLUME :
                 (sub_mic_on ? VOICE_CALL_SUB_MIC_VOLUME : 0)));
+
+        for (channel = 0; channel < 2; channel++) {
+            mixer_ctl_set_value(mixer_get_ctl_by_name(adev->mixer,
+                MIXER_CAPTURE_VOLUME), channel,
+                (main_mic_on ? DB_TO_CAPTURE_VOLUME(18) : DB_TO_CAPTURE_VOLUME(24)));
+        }
     } else if (adev->active_input) {
         /* determine input volume by use case */
         switch (adev->active_input->source) {
@@ -2669,7 +2675,7 @@ static int adev_set_voice_volume(struct audio_hw_device *dev, float volume)
     if (adev->devices.out_devices & AUDIO_DEVICE_OUT_EARPIECE) {
         mixer_ctl_set_value(mixer_get_ctl_by_name(adev->mixer,
                     MIXER_DL1_VOICE_PLAYBACK_VOLUME), 0,
-            (MIXER_ABE_GAIN_0DB-30) + (30*volume));
+            (MIXER_ABE_GAIN_0DB-40) + (35*volume));
     } else {
         mixer_ctl_set_value(mixer_get_ctl_by_name(adev->mixer,
                     MIXER_DL2_VOICE_PLAYBACK_VOLUME), 0,

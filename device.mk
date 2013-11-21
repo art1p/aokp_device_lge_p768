@@ -1,10 +1,13 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-$(call inherit-product, device/common/gps/gps_as.mk)
+$(call inherit-product, device/common/gps/gps_eu.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/lge/p768/overlay
 
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+
+PRODUCT_AAPT_CONFIG := normal hdpi xhdpi
+PRODUCT_AAPT_PREF_CONFIG := hdpi
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/postrecoveryboot.sh:recovery/root/sbin/postrecoveryboot.sh
@@ -14,14 +17,16 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/init.p768.usb.rc:root/init.p768.usb.rc \
     $(LOCAL_PATH)/init.lgep768board.rc:root/init.lgep768board.rc \
     $(LOCAL_PATH)/ueventd.lgep768board.rc:root/ueventd.lgep768board.rc \
-    $(LOCAL_PATH)/fstab.u2:root/fstab.u2 
+    $(LOCAL_PATH)/scripts/mtp.sh:system/xbin/mtp.sh \
+    $(LOCAL_PATH)/scripts/ums.sh:system/xbin/ums.sh \
+    $(LOCAL_PATH)/fstab.u2:root/fstab.lgep768board
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf \
     $(LOCAL_PATH)/configs/hostapd.conf:system/etc/wifi/softap/hostapd.conf \
     $(LOCAL_PATH)/configs/touch_dev.idc:system/usr/idc/touch_dev.idc \
     $(LOCAL_PATH)/configs/touch_dev.kl:system/usr/keylayout/touch_dev.kl \
-    $(LOCAL_PATH)/configs/Generic.kl:system/usr/keylayout/Generic.kl
+    $(LOCAL_PATH)/configs/omap4-keypad.kl:system/usr/keylayout/omap4-keypad.kl
 
 # stagefright confs
 PRODUCT_COPY_FILES += \
@@ -36,6 +41,10 @@ PRODUCT_COPY_FILES += \
 # RIL stuffs
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/ipc_channels.config:system/etc/ipc_channels.config
+
+# NFC stuffs
+#PRODUCT_COPY_FILES += \
+#    $(LOCAL_PATH)/configs/nfcee_access.xml:system/etc/nfcee_access.xml
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf
@@ -52,6 +61,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.sensor.compass.xml:system/etc/permissions/android.hardware.sensor.compass.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
+    frameworks/native/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml
 
 ## GPS
@@ -73,7 +83,8 @@ PRODUCT_PACKAGES += \
     audio_policy.default \
     audio.hdmi.p768 \
     audio.primary.p768 \
-    hwcomposer.p768
+    hwcomposer.p768 \
+    hwcomposer.omap4
 
 PRODUCT_PACKAGES += \
     OMXCore \
@@ -118,6 +129,15 @@ PRODUCT_PACKAGES += \
     libdashplayer \
     audio.usb.default
 
+# NFC packages
+#PRODUCT_PACKAGES += \
+#    libnfc \
+#    libnfc_jni \
+#    Nfc \
+#    Tag
+
+#FRAMEWORKS_BASE_SUBDIRS += \
+#	../../$(LOCAL_PATH)/framework-addons/
 
 PRODUCT_PACKAGES += \
     libskiahwdec \

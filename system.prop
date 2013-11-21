@@ -41,4 +41,4 @@ ro.build.target_operator=OPEN
 ## Bluetooth address
 ro.bt.bdaddr_path=/sys/devices/platform/bd_address/bdaddr_if
 
-persist.sys.usb.config=mtp,adb
+persist.sys.usb.config=mass_storage,adb
